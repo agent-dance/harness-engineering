@@ -1,0 +1,77 @@
+name: Publish Skills
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "skills/**"
+      - "scripts/publish-hubs.mjs"
+      - "package.json"
+      - ".github/workflows/publish-skills.yml"
+  workflow_dispatch:
+    inputs:
+      skills:
+        description: "逗号分隔的 skill slug，留空则自动检测"
+        required: false
+        default: ""
+      bump:
+        description: "ClawHub 版本号增长类型"
+        required: false
+        default: "patch"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Validate local skills package
+        run: npm run validate:skills
+
+      - name: Resolve target skills
+        id: target
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          INPUT_SKILLS="${{ github.event.inputs.skills }}"
+          if [[ -n "${INPUT_SKILLS}" ]]; then
+            TARGET_SKILLS="${INPUT_SKILLS}"
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            TARGET_SKILLS="$(node -e "const fs=require('fs'); const data=JSON.parse(fs.readFileSync('skills/publish-manifest.json','utf8')); console.log(Object.keys(data.skills).join(','));")"
+          elif [[ "${{ github.event.before }}" == "0000000000000000000000000000000000000000" ]]; then
+            TARGET_SKILLS="$(git ls-tree -r --name-only HEAD skills | awk -F/ '/^skills\/[^/]+\// {print $2}' | sort -u | paste -sd, -)"
+          else
+            TARGET_SKILLS="$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" -- skills | awk -F/ '/^skills\/[^/]+\// {print $2}' | sort -u | paste -sd, -)"
+          fi
+
+          echo "skills=${TARGET_SKILLS}" >> "$GITHUB_OUTPUT"
+          echo "Resolved skills: ${TARGET_SKILLS:-<none>}"
+
+      - name: Validate remote discoverability on skills.sh
+        run: npm run publish:skills.sh -- --repo-url "https://github.com/${{ github.repository }}"
+
+      - name: Dry-run ClawHub publish plan
+        if: steps.target.outputs.skills != ''
+        run: npm run publish:clawhub -- --skills "${{ steps.target.outputs.skills }}" --dry-run
+
+      - name: Publish changed skills to ClawHub
+        if: steps.target.outputs.skills != '' && secrets.CLAWHUB_TOKEN != ''
+        env:
+          CLAWHUB_TOKEN: ${{ secrets.CLAWHUB_TOKEN }}
+          PUBLISH_BUMP: ${{ github.event.inputs.bump }}
+        run: |
+          BUMP="${PUBLISH_BUMP:-patch}"
+          npm run publish:clawhub -- --skills "${{ steps.target.outputs.skills }}" --bump "${BUMP}" --changelog "CI publish for ${GITHUB_SHA::7}"

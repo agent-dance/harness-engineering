@@ -1,0 +1,11 @@
+{
+  "name": "harness-engineering",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "validate:skills": "npx skills add . --list --full-depth",
+    "publish:hubs": "node scripts/publish-hubs.mjs",
+    "publish:skills.sh": "node scripts/publish-hubs.mjs --hub skills.sh",
+    "publish:clawhub": "node scripts/publish-hubs.mjs --hub clawhub"
+  }
+}

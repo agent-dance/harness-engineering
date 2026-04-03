@@ -1,0 +1,17 @@
+{
+  "skills": {
+    "gangjing": {
+      "path": "skills/gangjing",
+      "displayName": "杠精 Gangjing",
+      "initialVersion": "1.0.0",
+      "defaultBump": "patch",
+      "clawhubTags": [
+        "latest",
+        "red-team",
+        "engineering",
+        "prompting",
+        "zh-cn"
+      ]
+    }
+  }
+}
