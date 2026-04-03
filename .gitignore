@@ -1,9 +1,11 @@
 .omx/
 .clawhub/
 node_modules/
+.*/skills/
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 *.log
 .DS_Store
+skills-lock.json
