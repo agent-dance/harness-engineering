@@ -217,7 +217,7 @@ function publishClawHub(skillEntries, options) {
     const publishArgs = [
       "clawhub",
       "publish",
-      meta.path,
+      skillPath,
       "--slug",
       slug,
       "--name",
@@ -286,10 +286,11 @@ function inspectRemoteSkill(slug) {
 function buildLocalFileHashes(skillPath) {
   const trackedFiles = gitTrackedFiles(skillPath);
   const files = trackedFiles.length > 0 ? trackedFiles : scanLocalTextFiles(skillPath);
+  const ignoreRules = loadClawHubIgnoreRules(skillPath);
   return files.map((file) => ({
     path: file.path,
     sha256: sha256(readFileSync(file.absolutePath))
-  }));
+  })).filter((file) => !isIgnoredByClawHub(file.path, ignoreRules));
 }
 
 function gitTrackedFiles(skillPath) {
@@ -355,6 +356,29 @@ function shouldIncludeFile(relativePath) {
     ? normalized.split(".").pop().toLowerCase()
     : "";
   return TEXT_EXTENSIONS.has(extension);
+}
+
+function loadClawHubIgnoreRules(skillPath) {
+  const ignorePath = path.join(skillPath, ".clawhubignore");
+  if (!existsSync(ignorePath)) {
+    return [];
+  }
+
+  return readFileSync(ignorePath, "utf8")
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith("#"));
+}
+
+function isIgnoredByClawHub(relativePath, rules) {
+  const normalized = normalizePath(relativePath);
+  return rules.some((rule) => {
+    const normalizedRule = normalizePath(rule);
+    if (normalizedRule.endsWith("/")) {
+      return normalized.startsWith(normalizedRule);
+    }
+    return normalized === normalizedRule;
+  });
 }
 
 function buildFingerprint(files) {

@@ -127,7 +127,7 @@ description: >
 
 ### Step 2: 六把刀，刀刀见血
 
-读取 `references/attack-dimensions.md` 获取完整攻击手册。
+优先读取 `references/attack-dimensions.md` 获取完整攻击手册。
 
 #### 🔪 第一刀: 你以为的前提，其实是空中楼阁
 
@@ -182,7 +182,9 @@ description: >
 > 你的"没问题"，现在还觉得没问题吗？
 
 **调用方式**：
-1. 根据目标代码生成攻击配置 JSON（参考 `references/attack-patterns.md`）
+1. 根据目标代码生成攻击配置 JSON
+   - 如果当前分发包里有 `references/attack-patterns.md`，优先按它的模板生成
+   - 如果没有这个文件，就按目标函数签名和常见脆弱点自行构造最小攻击配置：类型混淆、边界值、空值、超长输入、编码/注入、权限绕过、并发/重入
 2. 运行本技能自带的攻击引擎：
    ```bash
    # Python 目标
@@ -217,7 +219,7 @@ description: >
 
 ## 强度校准
 
-读取 `references/intensity-calibration.md` 获取完整标准。
+优先读取 `references/intensity-calibration.md` 获取完整标准。
 
 | 强度 | 触发 | 杠法 |
 |------|------|------|
@@ -339,7 +341,9 @@ description: >
 
 ## 内置工具
 
-杠精不只是嘴上功夫。`scripts/` 目录下自带三件套：
+完整仓库版的杠精不只是嘴上功夫。若当前分发包包含 `scripts/` 目录，可直接使用三件套；如果当前分发包没带这些脚本，就把"代码实锤"降级为**生成攻击配置 + 指导用户在完整仓库运行**。
+
+`scripts/` 目录下的三件套：
 
 | 工具 | 用途 | 杠精说 |
 |------|------|--------|
