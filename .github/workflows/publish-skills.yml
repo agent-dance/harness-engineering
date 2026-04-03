@@ -68,10 +68,14 @@ jobs:
         run: npm run publish:clawhub -- --skills "${{ steps.target.outputs.skills }}" --dry-run
 
       - name: Publish changed skills to ClawHub
-        if: steps.target.outputs.skills != '' && secrets.CLAWHUB_TOKEN != ''
+        if: steps.target.outputs.skills != ''
         env:
           CLAWHUB_TOKEN: ${{ secrets.CLAWHUB_TOKEN }}
           PUBLISH_BUMP: ${{ github.event.inputs.bump }}
         run: |
+          if [[ -z "${CLAWHUB_TOKEN}" ]]; then
+            echo "CLAWHUB_TOKEN is not configured. Skipping ClawHub publish."
+            exit 0
+          fi
           BUMP="${PUBLISH_BUMP:-patch}"
           npm run publish:clawhub -- --skills "${{ steps.target.outputs.skills }}" --bump "${BUMP}" --changelog "CI publish for ${GITHUB_SHA::7}"
