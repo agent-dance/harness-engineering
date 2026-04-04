@@ -265,7 +265,8 @@ async function main() {
   }
 
   const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
-  const targetPath = path.resolve(path.dirname(configPath), config.target_module);
+  const configDir = path.resolve(path.dirname(configPath));
+  const targetPath = resolveTargetPath(configDir, config.target_module);
   const attacks = config.attacks;
   const results = [];
 
@@ -304,6 +305,29 @@ async function main() {
     process.stdout.write(jsonStr + "\n");
   }
   process.stderr.write(`\n  \u2192 Score: ${score}/100 (Grade: ${grade})\n`);
+}
+
+function resolveTargetPath(configDir, targetModule) {
+  if (typeof targetModule !== "string" || !targetModule.trim()) {
+    throw new Error("config.target_module must be a non-empty string");
+  }
+
+  const resolved = path.resolve(configDir, targetModule);
+  const relative = path.relative(configDir, resolved);
+  const escapesConfigDir = relative.startsWith("..") || path.isAbsolute(relative);
+
+  if (escapesConfigDir) {
+    throw new Error(
+      `Refusing to load a target outside the attack config directory: ${targetModule}`
+    );
+  }
+
+  const stat = fs.statSync(resolved, { throwIfNoEntry: false });
+  if (!stat || !stat.isFile()) {
+    throw new Error(`Target module not found: ${resolved}`);
+  }
+
+  return resolved;
 }
 
 main().catch(e => { process.stderr.write(`Fatal: ${e.message}\n`); process.exit(1); });

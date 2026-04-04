@@ -325,7 +325,7 @@ unicode_attacks = {
     'rtl_override': '\u202eevil\u202c',       # right-to-left override
     'homoglyph': 'аdmin',                      # Cyrillic 'а' vs Latin 'a'
     'combining_chars': 'e\u0301',             # é as two chars
-    'emoji': '💩🔥👨‍👩‍👧‍👦',                    # multi-byte, ZWJ sequences
+    'emoji': '💩🔥👨👩👧👦',                      # multi-byte emoji sequence
     'surrogate_pair': '\ud800',               # lone surrogate (invalid UTF-16)
     'bom': '\ufeff' + 'content',              # byte order mark
     'replacement_char': '\ufffd',
@@ -729,7 +729,7 @@ username = "al\u200bice"  # zero-width space between 'l' and 'i'
 # Looks like "alice" everywhere
 # But:
 #   len(username) == 6, not 5
-#   filename becomes "al​ice.json" (different from "alice.json")
+#   filename becomes "al\\u200bice.json" (different from "alice.json")
 #   Two users can visually impersonate each other
 
 # Detection: scan for Unicode categories Cf, Mn, Cc above ASCII range

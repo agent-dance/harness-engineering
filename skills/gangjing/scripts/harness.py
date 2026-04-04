@@ -174,6 +174,27 @@ def load_target(module_path: str, function_name: str):
     return getattr(module, function_name)
 
 
+def resolve_target_path(config_path: str, target_module: str) -> Path:
+    """Resolve target_module relative to the config and keep it in-bounds."""
+    if not isinstance(target_module, str) or not target_module.strip():
+        raise ValueError("config.target_module must be a non-empty string")
+
+    config_dir = Path(config_path).resolve().parent
+    target_path = (config_dir / target_module).resolve()
+
+    try:
+        target_path.relative_to(config_dir)
+    except ValueError as exc:
+        raise ValueError(
+            f"Refusing to load a target outside the attack config directory: {target_module}"
+        ) from exc
+
+    if not target_path.is_file():
+        raise FileNotFoundError(f"Target module not found: {target_path}")
+
+    return target_path
+
+
 def run_single_attack(target_func, attack, timeout):
     """Run one attack vector with timeout + semantic validation."""
     args = attack.get("args", [])
@@ -314,7 +335,8 @@ def main():
     with open(args.config) as f:
         config = json.load(f)
 
-    target_func = load_target(config["target_module"], config["target_function"])
+    target_path = resolve_target_path(args.config, config["target_module"])
+    target_func = load_target(str(target_path), config["target_function"])
     attacks = config["attacks"]
     results = []
 
@@ -330,7 +352,7 @@ def main():
 
     score = calculate_score(results)
     output = {
-        "target": f"{config['target_module']}::{config['target_function']}",
+        "target": f"{target_path}::{config['target_function']}",
         "total_attacks": len(results),
         "summary": {
             v: sum(1 for r in results if r["verdict"] == v)
