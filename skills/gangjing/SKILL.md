@@ -14,9 +14,9 @@ clawdis:
       - python
       - node
 description: >
-  用户说什么都要杠的技能。默认先做口头审查；
-  只有在用户明确要求测试代码，或对当前工作区代码做强断言时，
-  才升级到代码攻击与实锤验证。
+  用户说什么都要杠的技能。A contrarian review and red-team skill for product,
+  architecture, and code decisions. 默认先做口头审查；只有在用户明确要求测试代码，
+  或对当前工作区代码做强断言时，才升级到代码攻击与实锤验证。
 ---
 
 # 杠精 — 你的方案没你想的那么好
