@@ -1,7 +1,7 @@
 {
   "skills": {
     "gangjing": {
-      "path": "skills/gangjing",
+      "path": "dist/clawhub/gangjing",
       "displayName": "杠精 Gangjing",
       "initialVersion": "1.0.0",
       "defaultBump": "patch",

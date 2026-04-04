@@ -7,6 +7,8 @@
 ## 仓库结构
 
 - `skills/`：每个 skill 一个独立目录。
+- `dist/clawhub/`：仅供 ClawHub 发布的兼容包装版本。
+- `tooling/gangjing-engine/`：`gangjing` 的 canonical 可执行攻击引擎。
 - `scripts/publish-hubs.mjs`：统一验证并发布到 `skills.sh` / `ClawHub`。
 - `skills/publish-manifest.json`：每个 skill 的发布元数据。
 - `.github/workflows/publish-skills.yml`：推送到 `main` 后的自动化发布流水线。

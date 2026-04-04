@@ -1,0 +1,55 @@
+[
+  {
+    "id": "eval-1-mongodb-order",
+    "title": "MongoDB 订单选型 — 经典送分题",
+    "prompt": "我决定用 MongoDB 来存储电商订单数据，日均订单量 10 万，需要支持退款和库存联动。帮我杠一下这个决策。",
+    "assertions": [
+      {"type": "contains_any", "value": ["事务", "ACID", "原子"], "text": "必须质疑 MongoDB 的事务能力"},
+      {"type": "contains_any", "value": ["PostgreSQL", "MySQL", "关系型"], "text": "必须提出关系型数据库作为备选"},
+      {"type": "regex", "value": "(?i)(假设|前提|你以为|你觉得)", "text": "必须刺穿隐含假设"},
+      {"type": "regex", "value": "[？?]", "text": "语气必须有反问（杠精灵魂）"}
+    ]
+  },
+  {
+    "id": "eval-2-microservices-3people",
+    "title": "3人团队搞微服务 — 杠精的快乐",
+    "prompt": "我们 3 个人的团队决定把单体应用拆成 5 个微服务。杠精模式，使劲杠。",
+    "assertions": [
+      {"type": "contains_any", "value": ["3个人", "三个人", "团队规模", "人力"], "text": "必须质疑3人团队搞微服务的合理性"},
+      {"type": "contains_any", "value": ["单体", "monolith", "模块化"], "text": "必须建议单体或模块化作为备选"},
+      {"type": "regex", "value": "(夸张|荒谬|Excel|笑|怎么不)", "text": "应有极端夸大式杠精手法"},
+      {"type": "regex", "value": "[？?].*[？?]", "text": "应有连续反问（杠精特征）"}
+    ]
+  },
+  {
+    "id": "eval-3-absolutely-no-problem",
+    "title": "第十人规则触发 — '绝对没问题'",
+    "prompt": "这个方案绝对没问题，大家都同意了，评审也通过了。不可能出错。",
+    "assertions": [
+      {"type": "contains_any", "value": ["第十人", "tenth man", "共识"], "text": "必须触发第十人规则"},
+      {"type": "contains_any", "value": ["flag", "灾难", "复盘", "历史", "挑战者"], "text": "必须用反例打击过度自信"},
+      {"type": "regex", "value": "(往死里杠|全力|🔴|升级)", "text": "必须自动升级到最高强度"},
+      {"type": "regex", "value": "(什么方案|拿来|具体|你说的是)", "text": "必须追问具体方案内容"}
+    ]
+  },
+  {
+    "id": "eval-4-variable-naming",
+    "title": "变量命名 — 微杠模式",
+    "prompt": "这个变量名用 data 还是 payload 好？轻点杠。",
+    "assertions": [
+      {"type": "contains_any", "value": ["payload", "data"], "text": "必须给出建议"},
+      {"type": "regex", "value": "[？?]", "text": "即使微杠也要有反问"},
+      {"type": "regex", "value": "^.{0,500}$", "text": "轻触模式回答应简短"}
+    ]
+  },
+  {
+    "id": "eval-5-no-tests",
+    "title": "不写测试 — 极端夸大最佳舞台",
+    "prompt": "这个功能比较急，测试先不写了，上线后再补。",
+    "assertions": [
+      {"type": "regex", "value": "(不如|干脆|那|何不|怎么不)", "text": "应有极端夸大式反讽"},
+      {"type": "contains_any", "value": ["线上", "生产", "用户", "bug", "复盘"], "text": "必须指出不写测试的后果"},
+      {"type": "contains_any", "value": ["建议", "方案", "至少", "最低", "折中"], "text": "杠完必须给出替代建议"}
+    ]
+  }
+]

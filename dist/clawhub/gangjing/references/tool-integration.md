@@ -35,14 +35,18 @@
 
 ### Step 2: 执行攻击
 
-脚本位于本技能的 `scripts/` 目录：
+完整仓库版脚本位于 `tooling/gangjing-engine/`。
+如果当前安装包没有 ready-to-run 脚本，就从 `templates/attack-engine-kit.md`
+落地临时 harness 再执行。
 
 ```bash
 # Python 目标 — 每次攻击自动 fork 子进程隔离
-python3 scripts/harness.py attack_config.json --timeout 5 -o results.json
+python3 tooling/gangjing-engine/harness.py attack_config.json --timeout 5 -o results.json
+python3 .gangjing-tmp/harness.py attack_config.json --timeout 5 -o results.json
 
 # JavaScript 目标 — 支持 async/Promise，每次攻击 fork 子进程
-node scripts/harness.js attack_config.json --timeout 5 -o results.json
+node tooling/gangjing-engine/harness.js attack_config.json --timeout 5 -o results.json
+node .gangjing-tmp/harness.js attack_config.json --timeout 5 -o results.json
 
 # Go 目标 — 写 _test.go 文件，用 go test 执行
 go test -v -run "." -timeout 30s -count=1 .
@@ -109,7 +113,7 @@ verdict 类型：
 ```bash
 python3 -c "
 import sys, json
-sys.path.insert(0, 'scripts')
+sys.path.insert(0, 'tooling/gangjing-engine')
 from report_html import load_results, render_html
 targets = load_results(['results.json'])
 html = render_html(targets)

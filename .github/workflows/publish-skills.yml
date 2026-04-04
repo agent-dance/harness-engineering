@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - "skills/**"
+      - "dist/**"
       - "scripts/publish-hubs.mjs"
       - "package.json"
       - ".github/workflows/publish-skills.yml"
@@ -51,10 +52,25 @@ jobs:
             TARGET_SKILLS="${INPUT_SKILLS}"
           elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             TARGET_SKILLS="$(node -e "const fs=require('fs'); const data=JSON.parse(fs.readFileSync('skills/publish-manifest.json','utf8')); console.log(Object.keys(data.skills).join(','));")"
-          elif [[ "${{ github.event.before }}" == "0000000000000000000000000000000000000000" ]]; then
-            TARGET_SKILLS="$(git ls-tree -r --name-only HEAD skills | awk -F/ '/^skills\/[^/]+\// {print $2}' | sort -u | paste -sd, -)"
           else
-            TARGET_SKILLS="$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" -- skills | awk -F/ '/^skills\/[^/]+\// {print $2}' | sort -u | paste -sd, -)"
+            TARGET_SKILLS="$(node - <<'NODE'
+const fs = require('fs');
+const cp = require('child_process');
+const manifest = JSON.parse(fs.readFileSync('skills/publish-manifest.json','utf8')).skills || {};
+const before = process.env.GITHUB_EVENT_BEFORE;
+const sha = process.env.GITHUB_SHA;
+let changed = [];
+if (before === '0000000000000000000000000000000000000000') {
+  changed = cp.execSync('git ls-tree -r --name-only HEAD', { encoding: 'utf8' }).trim().split(/\r?\n/).filter(Boolean);
+} else {
+  changed = cp.execSync(`git diff --name-only "${before}" "${sha}"`, { encoding: 'utf8' }).trim().split(/\r?\n/).filter(Boolean);
+}
+const selected = Object.entries(manifest)
+  .filter(([, meta]) => changed.some((file) => file === meta.path || file.startsWith(meta.path + '/')))
+  .map(([slug]) => slug);
+console.log(selected.join(','));
+NODE
+)"
           fi
 
           echo "skills=${TARGET_SKILLS}" >> "$GITHUB_OUTPUT"
