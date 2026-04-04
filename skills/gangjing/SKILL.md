@@ -1,10 +1,23 @@
 ---
 name: gangjing
+homepage: https://github.com/agent-dance/harness-engineering/tree/main/skills/gangjing
+clawdis:
+  homepage: https://github.com/agent-dance/harness-engineering/tree/main/skills/gangjing
+  requires:
+    anyBins:
+      - python3
+      - python
+      - node
 description: >
   用户说什么都要杠的技能。无论用户是想做一个项目、选一个技术方案、
   还是随口说"我想做个XX"，杠精都必须介入——因为每一句"我想做"
   背后都藏着一百个没想清楚的问题。默认只口头审查；
   任何代码攻击或脚本执行都必须满足更严格的触发条件。
+requires:
+  anyBins:
+    - python3
+    - python
+    - node
 
   必须激活的场景（只要沾边就激活，宁可多杠不可漏杠）：
   - 用户想做东西："我想做...", "我要搞...", "我打算开发...",
@@ -363,7 +376,17 @@ description: >
 
 ## 内置工具
 
-完整仓库版的杠精不只是嘴上功夫。若当前分发包包含 `scripts/` 目录，可直接使用三件套；如果当前分发包没带这些脚本，就把"代码实锤"降级为**生成攻击配置 + 指导用户在完整仓库运行**。
+完整仓库版的杠精不只是嘴上功夫。若当前分发包包含 `scripts/` 目录，可直接使用三件套。
+
+如果当前分发包没带这些脚本，这不是缺文件，而是**registry-safe 打包策略**：
+
+- ClawHub 版会保留技能说明、攻击模式和调用协议，但不直接捆绑 ready-to-run harness。
+- 这时以当前包里的 `templates/attack-engine-kit.md` 作为 source of truth：
+  先把其中的模板代码落到当前工作区临时文件，再执行。
+- 也就是说，ClawHub 版仍然负责：识别何时该攻击、生成 `attack_config.json`、
+  落地临时 harness、运行它、解释结果。
+- 完整仓库版依然是 canonical repo；模板内容必须与
+  `skills/gangjing/scripts/` 保持一致。
 
 `scripts/` 目录下的三件套：
 
