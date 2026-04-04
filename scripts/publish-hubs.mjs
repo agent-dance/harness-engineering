@@ -59,7 +59,8 @@ function main() {
   const skillEntries = selectSkills(manifest.skills, options.skills);
 
   if (skillEntries.length === 0) {
-    throw new Error("No skills selected.");
+    console.log("No managed skills selected for this hub operation.");
+    return;
   }
 
   console.log(`Publishing flow for: ${skillEntries.map(([slug]) => slug).join(", ")}`);
@@ -155,12 +156,15 @@ function selectSkills(skills, selectedSlugs) {
   if (!selectedSlugs) {
     return entries;
   }
-  return selectedSlugs.map((slug) => {
+  const selected = [];
+  for (const slug of selectedSlugs) {
     if (!skills?.[slug]) {
-      throw new Error(`Skill "${slug}" is not present in skills/publish-manifest.json`);
+      console.log(`Skipping unmanaged skill "${slug}" (not present in skills/publish-manifest.json).`);
+      continue;
     }
-    return [slug, skills[slug]];
-  });
+    selected.push([slug, skills[slug]]);
+  }
+  return selected;
 }
 
 function validateSkillsSh(skillEntries, options) {

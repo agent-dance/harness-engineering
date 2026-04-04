@@ -2,8 +2,6 @@
 .clawhub/
 node_modules/
 .*/skills/
-!.github/skills/
-!.github/skills/**
 __pycache__/
 *.pyc
 *.pyo
