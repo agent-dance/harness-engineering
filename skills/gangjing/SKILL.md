@@ -212,14 +212,17 @@ description: >
    - 如果没有这个文件，就按目标函数签名和常见脆弱点自行构造最小攻击配置：类型混淆、边界值、空值、超长输入、编码/注入、权限绕过、并发/重入
 2. 运行本技能自带的攻击引擎：
    ```bash
-   # Python 目标
+   # 如果当前包内自带 scripts/，可直接运行
    python3 scripts/harness.py attack_config.json --timeout 5 -o results.json
-   # JavaScript 目标（支持 async）
    node scripts/harness.js attack_config.json --timeout 5 -o results.json
+
+   # 否则先从 templates/attack-engine-kit.md 落地临时 harness
+   python3 .gangjing-tmp/harness.py attack_config.json --timeout 5 -o results.json
+   node .gangjing-tmp/harness.js attack_config.json --timeout 5 -o results.json
    # Go 目标
    go test -v -run "." -timeout 30s .
    ```
-3. 用 `scripts/report_html.py` 生成可视化报告（可选）
+3. 用 `tooling/gangjing-engine/report_html.py` 或模板版生成可视化报告（可选）
 4. 引用结果中的 CRASHED / WRONG / LEAKED 作为杠的论据
 
 ### Step 3: 杠完要收场（杠精也有温柔的一面）
@@ -376,9 +379,9 @@ description: >
 - 也就是说，ClawHub 版仍然负责：识别何时该攻击、生成 `attack_config.json`、
   落地临时 harness、运行它、解释结果。
 - 完整仓库版依然是 canonical repo；模板内容必须与
-  `skills/gangjing/scripts/` 保持一致。
+  `tooling/gangjing-engine/` 保持一致。
 
-`scripts/` 目录下的三件套：
+canonical engine 三件套位于 `tooling/gangjing-engine/`：
 
 | 工具 | 用途 | 杠精说 |
 |------|------|--------|

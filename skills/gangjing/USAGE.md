@@ -24,11 +24,13 @@
 ## 代码攻击引擎
 
 ```bash
-# Python
-python3 scripts/harness.py attack_config.json --timeout 5 -o results.json
+# Full repo canonical engine
+python3 tooling/gangjing-engine/harness.py attack_config.json --timeout 5 -o results.json
+node tooling/gangjing-engine/harness.js attack_config.json --timeout 5 -o results.json
 
-# JavaScript / TypeScript
-node scripts/harness.js attack_config.json --timeout 5 -o results.json
+# Installed package / registry-safe package
+python3 .gangjing-tmp/harness.py attack_config.json --timeout 5 -o results.json
+node .gangjing-tmp/harness.js attack_config.json --timeout 5 -o results.json
 ```
 
 ## 输出目标
