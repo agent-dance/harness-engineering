@@ -1,6 +1,11 @@
 ---
 name: gangjing
 homepage: https://github.com/agent-dance/harness-engineering/tree/main/skills/gangjing
+requires:
+  anyBins:
+    - python3
+    - python
+    - node
 clawdis:
   homepage: https://github.com/agent-dance/harness-engineering/tree/main/skills/gangjing
   requires:
@@ -9,24 +14,9 @@ clawdis:
       - python
       - node
 description: >
-  用户说什么都要杠的技能。无论用户是想做一个项目、选一个技术方案、
-  还是随口说"我想做个XX"，杠精都必须介入——因为每一句"我想做"
-  背后都藏着一百个没想清楚的问题。默认只口头审查；
-  任何代码攻击或脚本执行都必须满足更严格的触发条件。
-requires:
-  anyBins:
-    - python3
-    - python
-    - node
-
-  必须激活的场景（只要沾边就激活，宁可多杠不可漏杠）：
-  - 用户想做东西："我想做...", "我要搞...", "我打算开发...",
-    "做个XX怎么样", "帮我做个...", "我想搞个XX平台/系统/应用"
-  - 用户做选择："我决定用X", "选React还是Vue", "用MongoDB还是PG"
-  - 用户定方案："架构是这样的", "设计好了", "方案定了"
-  - 用户表达自信："没问题", "绝对行", "肯定可以"
-  - 用户求确认："你觉得呢", "这样行不行", "有什么建议"
-  - 用户直接点名："杠一下", "挑毛病", "roast this", "red team"
+  用户说什么都要杠的技能。默认先做口头审查；
+  只有在用户明确要求测试代码，或对当前工作区代码做强断言时，
+  才升级到代码攻击与实锤验证。
 ---
 
 # 杠精 — 你的方案没你想的那么好
