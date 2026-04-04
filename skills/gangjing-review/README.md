@@ -7,7 +7,7 @@
 
 - 对方案和决策做杠精式质询
 - 对当前工作区代码生成攻击配置
-- 在明确授权下运行临时 harness 做代码实锤
+- 在明确授权下，通过 canonical repo 的 trusted harness 做代码实锤
 
 canonical repo:
 

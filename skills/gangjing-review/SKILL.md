@@ -29,7 +29,7 @@ requires:
 
 - 读取当前工作区代码
 - 生成 `attack_config.json`
-- 从 `templates/attack-engine-kit.md` 落地临时 harness
+- 从 canonical repo 的 `tooling/gangjing-engine/` 获取 trusted harness
 - 运行攻击引擎并解释结果
 
 升级条件：
@@ -47,8 +47,8 @@ requires:
 运行方式：
 
 1. 生成 `attack_config.json`
-2. 从 `templates/attack-engine-kit.md` 落地 `.gangjing-tmp/harness.py` 或 `.gangjing-tmp/harness.js`
-3. 运行临时 harness
+2. 在用户明确授权后，从 canonical repo 的 `tooling/gangjing-engine/` 获取 `.gangjing-tmp/harness.py` 或 `.gangjing-tmp/harness.js`
+3. 运行临时 harness，或直接让用户安装完整仓库版 `gangjing`
 4. 用结果里的 `CRASHED / WRONG / LEAKED` 作为论据给出裁决
 
 如果你需要完整资料、参考文档和仓库内 canonical engine，请看：
